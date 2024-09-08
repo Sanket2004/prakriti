@@ -85,48 +85,48 @@ Replace the placeholder ``` GEMINI_API_KEY``` in ```main.dart``` with your actua
     └── README.md
 
 
-## ScreenShots
+## Screenshots
 
-<div style="display: flex; flex-wrap: wrap; gap: 16px; ">
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Splash Screen Page</h3>
-    <img src="assets/ss/splash.png" alt="First Screen Page" style="width: 100%; height: auto;">
+<div style="display: flex; overflow-x: auto; white-space: nowrap; gap: 16px; padding: 10px;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Splash Screen Page</h4>
+    <img src="assets/ss/splash.png" alt="Splash Screen Page" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Login Screen</h3>
-    <img src="assets/ss/login.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Login Screen</h4>
+    <img src="assets/ss/login.png" alt="Login Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Register Screen</h3>
-    <img src="assets/ss/register.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Register Screen</h4>
+    <img src="assets/ss/register.png" alt="Register Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Forgot Password Screen</h3>
-    <img src="assets/ss/fpass.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Forgot Password Screen</h4>
+    <img src="assets/ss/fpass.png" alt="Forgot Password Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Home Screen</h3>
-    <img src="assets/ss/home.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Home Screen</h4>
+    <img src="assets/ss/home.png" alt="Home Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Community Screen</h3>
-    <img src="assets/ss/community.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Community Screen</h4>
+    <img src="assets/ss/community.png" alt="Community Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Market Screen</h3>
-    <img src="assets/ss/market.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Market Screen</h4>
+    <img src="assets/ss/market.png" alt="Market Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Loans & Schemes Screen</h3>
-    <img src="assets/ss/loan.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Loans & Schemes Screen</h4>
+    <img src="assets/ss/loan.png" alt="Loans & Schemes Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>AI Assitant Screen</h3>
-    <img src="assets/ss/aibot.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>AI Assistant Screen</h4>
+    <img src="assets/ss/aibot.png" alt="AI Assistant Screen" style="width: 100%; height: auto;">
   </div>
-  <div style="flex: 1 1 200px; max-width: 200px; box-sizing: border-box;">
-    <h3>Rating Screen</h3>
-    <img src="assets/ss/rating.png" alt="First Screen Page" style="width: 100%; height: auto;">
+  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
+    <h4>Rating Screen</h4>
+    <img src="assets/ss/rating.png" alt="Rating Screen" style="width: 100%; height: auto;">
   </div>
 </div>
 
