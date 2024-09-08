@@ -31,7 +31,7 @@ jobs:
       # Install Flutter - specify exact version (e.g., 3.10.0) to avoid conflicts
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.0'  # Specify the required Flutter version
+          flutter-version: '3.24.1'  # Specify the required Flutter version
 
       # Install dependencies
       - name: Install dependencies
