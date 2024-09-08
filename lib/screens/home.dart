@@ -25,9 +25,6 @@ class _HomePageState extends State<HomePage> {
   User? _user;
   Map<String, dynamic>? _userData;
   final TextEditingController _searchController = TextEditingController();
-  String _selectedTag = ''; // Track the selected tag
-  List<Map<String, dynamic>> _filteredPasswords = [];
-  List<Map<String, dynamic>> _passwords = [];
 
   @override
   void initState() {
@@ -106,7 +103,6 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop(); // Close the dialog
                 await _logout(); // Call logout function
               },
               child: const Text(
@@ -130,13 +126,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Function to handle logout
+// Function to handle logout
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      // Navigate back to login screen or any other initial screen
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      // Navigate to login screen and remove all previous routes
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (Route<dynamic> route) => false, // This removes all previous routes
+      );
     } catch (e) {
       print('Error logging out: $e');
       // Show error message or handle gracefully
@@ -146,21 +145,6 @@ class _HomePageState extends State<HomePage> {
   String _getFirstName(String fullName) {
     List<String> nameParts = fullName.split(' ');
     return nameParts.isNotEmpty ? nameParts[0] : '';
-  }
-
-  // Function to filter passwords based on search query
-  void _filterPasswords(String query) {
-    List<Map<String, dynamic>> filteredList = _passwords.where((password) {
-      String website = password['website'] ?? '';
-      String username = password['username'] ?? '';
-
-      return website.toLowerCase().contains(query.toLowerCase()) ||
-          username.toLowerCase().contains(query.toLowerCase());
-    }).toList();
-
-    setState(() {
-      _filteredPasswords = filteredList;
-    });
   }
 
   // Menu bottom sheet
@@ -483,76 +467,73 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _searchController,
-                                    onChanged: _filterPasswords,
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.search,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(18),
-                                      hintText: 'What are you looking for ?',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey.shade500,
-                                          fontWeight: FontWeight.w300),
-                                      labelStyle:
-                                          const TextStyle(color: Colors.grey),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        borderSide: BorderSide(
-                                            color: Colors.grey.shade300),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        borderSide: BorderSide(
-                                            color: Colors.grey.shade500),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.grey.shade100,
-                                    ),
-                                  ),
-                                ),
-                                _searchController.text.isNotEmpty
-                                    ? const SizedBox(
-                                        width: 10,
-                                      )
-                                    : Container(),
-                                _searchController.text.isNotEmpty
-                                    ? SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: Button(
-                                          onPressed: () {
-                                            setState(() {
-                                              _searchController.clear();
-                                              _filterPasswords('');
-                                              _selectedTag = '';
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.close,
-                                            size: 18,
-                                          ),
-                                        ),
-                                      ).animate().slideX(
-                                        duration: 200.ms,
-                                        begin: 1,
-                                        end: 0,
-                                        curve: Curves.easeInOut)
-                                    : const SizedBox(
-                                        width: 0,
-                                        height: 0,
-                                      ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: TextFormField(
+                            //         controller: _searchController,
+                            //         keyboardType: TextInputType.text,
+                            //         textInputAction: TextInputAction.search,
+                            //         decoration: InputDecoration(
+                            //           contentPadding: const EdgeInsets.all(18),
+                            //           hintText: 'What are you looking for ?',
+                            //           hintStyle: TextStyle(
+                            //               color: Colors.grey.shade500,
+                            //               fontWeight: FontWeight.w300),
+                            //           labelStyle:
+                            //               const TextStyle(color: Colors.grey),
+                            //           enabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(20),
+                            //             borderSide: BorderSide(
+                            //                 color: Colors.grey.shade300),
+                            //           ),
+                            //           focusedBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(20),
+                            //             borderSide: BorderSide(
+                            //                 color: Colors.grey.shade500),
+                            //           ),
+                            //           border: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(20),
+                            //           ),
+                            //           filled: true,
+                            //           fillColor: Colors.grey.shade100,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     _searchController.text.isNotEmpty
+                            //         ? const SizedBox(
+                            //             width: 10,
+                            //           )
+                            //         : Container(),
+                            //     _searchController.text.isNotEmpty
+                            //         ? SizedBox(
+                            //             width: 60,
+                            //             height: 60,
+                            //             child: Button(
+                            //               onPressed: () {
+                            //                 setState(() {
+                            //                   _searchController.clear();
+                            //                 });
+                            //               },
+                            //               child: const Icon(
+                            //                 Icons.close,
+                            //                 size: 18,
+                            //               ),
+                            //             ),
+                            //           ).animate().slideX(
+                            //             duration: 200.ms,
+                            //             begin: 1,
+                            //             end: 0,
+                            //             curve: Curves.easeInOut)
+                            //         : const SizedBox(
+                            //             width: 0,
+                            //             height: 0,
+                            //           ),
+                            //   ],
+                            // ),
+                            // const SizedBox(
+                            //   height: 30,
+                            // ),
                             const SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),

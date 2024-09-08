@@ -178,7 +178,13 @@ class Section extends StatelessWidget {
                       size: 16, color: Colors.grey),
                   onTap: () async {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${items[index]} selected')),
+                      SnackBar(
+                        content: Text(
+                          'Searching for ${items[index]}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Color(0xff312651),
+                      ),
                     );
                     final Uri _url = Uri.parse(
                         "https://www.google.co.in/maps/search/nearby ${items[index]}");

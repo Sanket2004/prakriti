@@ -103,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
               'Registration successful, verify your email to login.',
               style: TextStyle(color: Colors.white),
             ),
-            backgroundColor: Color(0xffFF7777),
+            backgroundColor: Color(0xff312651),
           ),
         );
         // Send verification if email is not verified
@@ -127,10 +127,10 @@ class _SignupScreenState extends State<SignupScreen> {
           SnackBar(
             content: Text(
               message,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: const Color(0xffFF7777),
+              style: TextStyle(color: Colors.white),
           ),
+          backgroundColor: Color(0xff312651),
+        ),
         );
       } catch (e) {
         setState(() => _isLoading = false);
@@ -139,10 +139,10 @@ class _SignupScreenState extends State<SignupScreen> {
           const SnackBar(
             content: Text(
               'An error occurred. Please try again.',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Color(0xffFF7777),
+               style: TextStyle(color: Colors.white),
           ),
+          backgroundColor: Color(0xff312651),
+        ),
         );
       }
     }

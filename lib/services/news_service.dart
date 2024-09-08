@@ -6,7 +6,8 @@ class NewsService {
       '8324046971b04e0e9e1a998ae608ab3f'; // Replace with your API key
   final String baseUrl = 'https://newsapi.org/v2/everything/';
 
-Future<List<dynamic>> fetchNews(String query, {int limit = 10, int page = 1}) async {
+  Future<List<dynamic>> fetchNews(String query,
+      {int limit = 10, int page = 1}) async {
     final response = await http.get(
       Uri.parse('$baseUrl?q=$query&apiKey=$apiKey&pageSize=$limit&page=$page'),
     );

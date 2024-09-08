@@ -70,13 +70,15 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-          'An unexpected error occurred. Please try again later.',
-          style: TextStyle(color: Colors.white),
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'An unexpected error occurred. Please try again later.',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color(0xff312651),
         ),
-        backgroundColor: Color(0xff312651),
-      ));
+      );
     }
   }
 

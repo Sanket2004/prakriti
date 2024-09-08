@@ -9,7 +9,6 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prakriti/components/button.dart';
 import 'package:prakriti/responsive/responsive.dart';
-import 'package:prakriti/screens/posts_list_screen.dart';
 
 class CommunityPageScreen extends StatefulWidget {
   const CommunityPageScreen({super.key});
@@ -41,7 +40,7 @@ class _CommunityPageScreenState extends State<CommunityPageScreen> {
             'Post cannot be empty',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Color(0xffFF7777),
+          backgroundColor: Color(0xff312651),
         ),
       );
       return;
@@ -54,7 +53,7 @@ class _CommunityPageScreenState extends State<CommunityPageScreen> {
             'Please choose an image for your post',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Color(0xffFF7777),
+          backgroundColor: Color(0xff312651),
         ),
       );
       return;

@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:prakriti/components/button.dart';
+import 'package:prakriti/navigation/bottomNavigation.dart';
 import 'package:prakriti/screens/login_screen.dart';
 import 'package:video_player/video_player.dart';
 
@@ -12,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late VideoPlayerController _controller;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -24,6 +30,11 @@ class _SplashScreenState extends State<SplashScreen> {
       }).catchError((error) {
         print("Video initialization error: $error");
       });
+
+    // Schedule animation initialization after the first frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {}); // Trigger animations after the initial build
+    });
   }
 
   @override
@@ -31,6 +42,47 @@ class _SplashScreenState extends State<SplashScreen> {
     _controller
         .dispose(); // Dispose of the controller when the widget is removed
     super.dispose();
+  }
+
+  void _checkAuthStatus() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(
+        const Duration(seconds: 1)); // Hold the button for 1 sec
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && user.emailVerified) {
+      // User is authenticated and email is verified
+      try {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            child: const BottomNavigationScreen(),
+            type: PageTransitionType.rightToLeft,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      // User is not authenticated or email is not verified
+      try {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            child: const LoginScreen(),
+            type: PageTransitionType.rightToLeft,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -54,50 +106,76 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 )
               : const Center(
-                  child:
-                      CircularProgressIndicator()), // Show loading indicator if video is not initialized
-          const Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.green,
+                )), // Show loading indicator if video is not initialized
+          Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'প্রकृtiii', // Centered title text
-                  style: TextStyle(
+                  'প্রকৃtiii', // Centered title text
+                  // style: TextStyle(
+                  //   fontSize: 100,
+                  //   color: Colors.white,
+                  //   fontWeight: FontWeight.bold,
+                  // ),
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.alkatra(
                     fontSize: 100,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                SizedBox(height: 10),
+                ).animate().fadeIn(duration: 1000.ms).slideX(
+                      end: 0,
+                      begin: 15,
+                      curve: Curves.easeOutCubic,
+                    ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Sow',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
+                    ).animate().fadeIn(duration: 1000.ms).slideX(
+                        end: 0,
+                        begin: 15,
+                        curve: Curves.easeOutCubic,
+                        delay: 200.ms),
+                    const SizedBox(width: 10),
+                    const Text(
                       'Reap',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
+                    ).animate().fadeIn(duration: 1000.ms).slideX(
+                        end: 0,
+                        begin: 15,
+                        curve: Curves.easeOutCubic,
+                        delay: 400.ms),
+                    const SizedBox(width: 10),
+                    const Text(
                       'Harvest',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                    ),
+                    ).animate().fadeIn(duration: 1000.ms).slideX(
+                        end: 0,
+                        begin: 15,
+                        curve: Curves.easeOutCubic,
+                        delay: 600.ms),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
               ],
@@ -110,18 +188,33 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Button(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                        );
-                      },
-                      child: ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: 400),
-                          child: Center(child: Text("Let's get started"))))),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Button(
+                  onPressed: _checkAuthStatus,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Center(
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 6,
+                              ),
+                            )
+                          : const Text(
+                              "Let's Get Started",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                    ),
+                  ),
+                ).animate().fadeIn(duration: 1000.ms).slideX(
+                    end: 0,
+                    begin: 15,
+                    curve: Curves.easeOutCubic,
+                    delay: 700.ms),
+              ),
             ),
           ),
         ],

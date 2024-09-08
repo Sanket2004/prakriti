@@ -10,6 +10,8 @@ import 'package:prakriti/screens/community_page.dart'; // Adjust the import path
 import 'package:intl/intl.dart';
 
 class PostsListScreen extends StatelessWidget {
+  const PostsListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,10 @@ class PostsListScreen extends StatelessWidget {
               return const Center(
                 child: SizedBox(
                   width: 150,
-                  child: LinearProgressIndicator(),
+                  child: LinearProgressIndicator(
+                    minHeight: 5,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                 ),
               );
             }
@@ -64,26 +69,74 @@ class PostsListScreen extends StatelessWidget {
 
             final posts = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index].data() as Map<String, dynamic>;
-                final uid = post['uid'] as String;
-                final text = post['text'] as String;
-                final imageUrl = post['imageUrl'] as String;
-                final post_id = post['post_id'] as String;
-                // Check if 'timestamp' is null and handle it gracefully
-                final timestamp = post['timestamp'] != null
-                    ? post['timestamp'] as Timestamp
-                    : Timestamp
-                        .now(); // Use the current time if timestamp is null
+            return FutureBuilder<List<Map<String, dynamic>>>(
+              future: Future.wait([
+                ...posts.map((post) async {
+                  final postData = post.data() as Map<String, dynamic>;
+                  final userId = postData['uid'] as String?;
+                  if (userId == null) {
+                    return {
+                      'post': postData,
+                      'user': {},
+                    };
+                  }
+                  final userDoc = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(userId)
+                      .get();
+                  final userData = userDoc.data() ?? {};
+                  return {
+                    'post': postData,
+                    'user': userData,
+                  };
+                })
+              ]),
+              builder: (context, futureSnapshot) {
+                if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: SizedBox(
+                      width: 150,
+                      child: LinearProgressIndicator(
+                        minHeight: 5,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                  );
+                }
 
-                return PostItem(
-                  uid: uid,
-                  text: text,
-                  imageUrl: imageUrl,
-                  timestamp: timestamp,
-                  post_id: post_id,
+                if (futureSnapshot.hasError) {
+                  return Center(child: Text('Error: ${futureSnapshot.error}'));
+                }
+
+                if (!futureSnapshot.hasData || futureSnapshot.data!.isEmpty) {
+                  return const Center(child: Text('No posts available.'));
+                }
+                return ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    final data = futureSnapshot.data![index];
+                    final post = data['post'] as Map<String, dynamic>;
+                    final user = data['user'] as Map<String, dynamic>;
+
+                    final uid = post['uid'] as String;
+                    final text = post['text'] as String;
+                    final imageUrl = post['imageUrl'] as String;
+                    final postId = post['post_id'] as String;
+                    // Check if 'timestamp' is null and handle it gracefully
+                    final timestamp = post['timestamp'] != null
+                        ? post['timestamp'] as Timestamp
+                        : Timestamp
+                            .now(); // Use the current time if timestamp is null
+
+                    return PostItem(
+                      uid: uid,
+                      text: text,
+                      imageUrl: imageUrl,
+                      timestamp: timestamp,
+                      post_id: postId,
+                      userData: user,
+                    );
+                  },
                 );
               },
             );
@@ -100,13 +153,16 @@ class PostItem extends StatefulWidget {
   final String imageUrl;
   final Timestamp timestamp;
   final String post_id;
+  final Map<String, dynamic> userData;
 
   const PostItem({
+    super.key,
     required this.uid,
     required this.text,
     required this.imageUrl,
     required this.timestamp,
     required this.post_id,
+    required this.userData,
   });
 
   @override
@@ -261,123 +317,99 @@ class _PostItemState extends State<PostItem> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser!.uid;
+    final fullName = widget.userData['fullName'] as String? ?? 'Unknown User';
+    final avatarUrl = widget.userData['avatar'] as String? ?? '';
 
-    return FutureBuilder<DocumentSnapshot>(
-      future:
-          FirebaseFirestore.instance.collection('users').doc(widget.uid).get(),
-      builder: (context, userSnapshot) {
-        if (userSnapshot.connectionState == ConnectionState.waiting) {
-          return const ListTile(
-            title: Center(
-                child: SizedBox(width: 150, child: LinearProgressIndicator())),
-          );
-        }
-
-        if (userSnapshot.hasError) {
-          return const ListTile(
-              title: Center(child: Text('Error loading user')));
-        }
-
-        if (!userSnapshot.hasData) {
-          return const ListTile(title: Center(child: Text('User not found')));
-        }
-
-        final userData = userSnapshot.data!.data() as Map<String, dynamic>;
-        final fullName = userData['fullName'] as String? ?? 'Unknown User';
-        final avatarUrl = userData['avatar'] as String? ?? '';
-
-        return Card(
-          elevation: 0,
-          color: Colors.grey.shade100,
-          margin: const EdgeInsets.all(8),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      elevation: 0,
+      color: Colors.grey.shade100,
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: avatarUrl.isNotEmpty
-                          ? NetworkImage(avatarUrl)
-                          : const AssetImage(
-                                  'https://api.dicebear.com/9.x/dylan/svg')
-                              as ImageProvider,
-                      radius: 20,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fullName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('MMM d, yyyy • h:mm a')
-                                .format(widget.timestamp.toDate()),
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Show delete button if the current user is the author of the post
-                    if (currentUser == widget.uid)
-                      IconButton(
-                        icon: const HugeIcon(
-                          icon: HugeIcons.strokeRoundedDelete02,
-                          color: Colors.red,
-                          size: 24.0,
-                        ),
-                        onPressed: _showDeleteConfirmationDialog,
-                      ),
-                  ],
+                CircleAvatar(
+                  backgroundImage: avatarUrl.isNotEmpty
+                      ? NetworkImage(avatarUrl)
+                      : const AssetImage(
+                              'https://api.dicebear.com/9.x/dylan/svg')
+                          as ImageProvider,
+                  radius: 20,
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.text,
-                  style: const TextStyle(
-                    color: Colors.black,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fullName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        DateFormat('MMM d, yyyy • h:mm a')
+                            .format(widget.timestamp.toDate()),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                widget.imageUrl.isNotEmpty
-                    ? GestureDetector(
-                        onTap: _showImageViewer,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.network(
-                            widget.imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(), // Hide if there's no image
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        _isLiked ? Icons.eco : Icons.eco_outlined,
-                        color: _isLiked ? Colors.green : Colors.grey,
-                      ),
-                      onPressed: _toggleLike,
+                // Show delete button if the current user is the author of the post
+                if (currentUser == widget.uid)
+                  IconButton(
+                    icon: const HugeIcon(
+                      icon: HugeIcons.strokeRoundedDelete02,
+                      color: Colors.red,
+                      size: 24.0,
                     ),
-                    Text('$_likeCount likes'),
-                  ],
-                ),
+                    onPressed: _showDeleteConfirmationDialog,
+                  ),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 10),
+            Text(
+              widget.text,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 10),
+            widget.imageUrl.isNotEmpty
+                ? GestureDetector(
+                    onTap: _showImageViewer,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        widget.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(), // Hide if there's no image
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    _isLiked ? Icons.eco : Icons.eco_outlined,
+                    color: _isLiked ? Colors.green : Colors.grey,
+                  ),
+                  onPressed: _toggleLike,
+                ),
+                Text('$_likeCount likes'),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -387,6 +419,7 @@ class PhotoViewScreen extends StatelessWidget {
   final String postId;
 
   const PhotoViewScreen({
+    super.key,
     required this.imageUrl,
     required this.postId,
   });
@@ -433,7 +466,13 @@ class PhotoViewScreen extends StatelessWidget {
                     color: Colors.black.withOpacity(0.8),
                     padding: const EdgeInsets.all(16),
                     child: const Center(
-                      child: LinearProgressIndicator(color: Colors.white),
+                      child: LinearProgressIndicator(
+                        minHeight: 5,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
                     ),
                   );
                 }
@@ -480,7 +519,11 @@ class PhotoViewScreen extends StatelessWidget {
                         color: Colors.black.withOpacity(0.8),
                         padding: const EdgeInsets.all(16),
                         child: const Center(
-                          child: LinearProgressIndicator(color: Colors.white),
+                          child: LinearProgressIndicator(
+                            minHeight: 5,
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
                         ),
                       );
                     }
@@ -517,7 +560,7 @@ class PhotoViewScreen extends StatelessWidget {
                         creatorData['fullName'] as String? ?? 'Unknown';
 
                     return Container(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           top: 16, bottom: 30, left: 16, right: 16),
                       color: Colors.black.withOpacity(0.5),
                       child: Column(

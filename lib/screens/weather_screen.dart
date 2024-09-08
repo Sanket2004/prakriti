@@ -112,7 +112,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         : const SizedBox(
                             width: 50,
                             child: LinearProgressIndicator(
+                              minHeight: 5,
                               color: Color(0xff399918),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                             ),
                           )
                     : Row(
@@ -199,7 +202,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         : const SizedBox(
                             width: 50,
                             child: LinearProgressIndicator(
+                              minHeight: 5,
                               color: Color(0xff399918),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                             ),
                           )
                     : Row(
