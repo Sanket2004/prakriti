@@ -87,48 +87,36 @@ Replace the placeholder ``` GEMINI_API_KEY``` in ```main.dart``` with your actua
 
 ## Screenshots
 
-<div style="display: flex; overflow-x: auto; white-space: nowrap; gap: 16px; padding: 10px;">
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Splash Screen Page</h4>
-    <img src="assets/ss/splash.png" alt="Splash Screen Page" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Login Screen</h4>
-    <img src="assets/ss/login.png" alt="Login Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Register Screen</h4>
-    <img src="assets/ss/register.png" alt="Register Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Forgot Password Screen</h4>
-    <img src="assets/ss/fpass.png" alt="Forgot Password Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Home Screen</h4>
-    <img src="assets/ss/home.png" alt="Home Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Community Screen</h4>
-    <img src="assets/ss/community.png" alt="Community Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Market Screen</h4>
-    <img src="assets/ss/market.png" alt="Market Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Loans & Schemes Screen</h4>
-    <img src="assets/ss/loan.png" alt="Loans & Schemes Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>AI Assistant Screen</h4>
-    <img src="assets/ss/aibot.png" alt="AI Assistant Screen" style="width: 100%; height: auto;">
-  </div>
-  <div style="flex: 0 0 auto; width: 200px; box-sizing: border-box;">
-    <h4>Rating Screen</h4>
-    <img src="assets/ss/rating.png" alt="Rating Screen" style="width: 100%; height: auto;">
-  </div>
-</div>
+### Splash Screen Page
+<img src="assets/ss/splash.png" alt="Splash Screen Page" width="200" />
+
+### Login Screen
+<img src="assets/ss/login.png" alt="Login Screen" width="200" />
+
+### Register Screen
+<img src="assets/ss/register.png" alt="Register Screen" width="200" />
+
+### Forgot Password Screen
+<img src="assets/ss/fpass.png" alt="Forgot Password Screen" width="200" />
+
+### Home Screen
+<img src="assets/ss/home.png" alt="Home Screen" width="200" />
+
+### Community Screen
+<img src="assets/ss/community.png" alt="Community Screen" width="200" />
+
+### Market Screen
+<img src="assets/ss/market.png" alt="Market Screen" width="200" />
+
+### Loans & Schemes Screen
+<img src="assets/ss/loan.png" alt="Loans & Schemes Screen" width="200" />
+
+### AI Assistant Screen
+<img src="assets/ss/aibot.png" alt="AI Assistant Screen" width="200" />
+
+### Rating Screen
+<img src="assets/ss/rating.png" alt="Rating Screen" width="200" />
+
 
 ## Dependencies
 
