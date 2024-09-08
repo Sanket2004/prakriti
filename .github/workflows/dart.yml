@@ -24,10 +24,14 @@ jobs:
       # - uses: dart-lang/setup-dart@v1
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
-      # Install Flutter
+      # Clear Flutter cache to prevent version conflicts
+      - name: Clear Flutter Cache
+        run: rm -rf $HOME/.flutter
+
+      # Install Flutter - specify exact version (e.g., 3.10.0) to avoid conflicts
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.10.0'  # Specify the required Flutter version
 
       # Install dependencies
       - name: Install dependencies
